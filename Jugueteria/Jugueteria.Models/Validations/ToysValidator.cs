@@ -21,14 +21,22 @@ namespace Jugueteria.Models.Validations
 
             RuleFor(x => x.Compañía)
                 .MaximumLength(50).WithMessage("Maximo 50 caracteres")
-                .NotEmpty().WithMessage("La compañia es requerida");                
+                .NotEmpty().WithMessage("La compañia es requerida");
 
             RuleFor(x => x.RestriccionEdad)
-                .LessThan(100).WithMessage("Maximo 100");
+                .LessThanOrEqualTo(100).WithMessage("Maximo 100")
+                .NotEmpty().WithMessage("La restricción es requerida");
 
             RuleFor(x => x.Precio)
+                .LessThanOrEqualTo(1000).WithMessage("Maximo 1000")
                 .GreaterThanOrEqualTo(1).WithMessage("Debe ser mayor o igual a 1")
-                .LessThan(1000).WithMessage("Maximo 1000");
+                .NotEmpty().WithMessage("El precio es requerido");
+                
+
+
+
+
+
         }
 
 

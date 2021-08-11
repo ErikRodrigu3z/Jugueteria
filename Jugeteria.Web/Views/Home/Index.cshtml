@@ -1,0 +1,356 @@
+﻿@model Jugueteria.Models.ViewModels.ToysViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="https://use.fontawesome.com/6815060193.js"></script>
+
+
+<div class="text-center">
+    <h1 class="display-4">Aspiria Test</h1>
+</div>
+
+<div class="container-fluid">
+
+
+    <!-- datatable start -->
+    <div class="table-responsive">
+        <table id="dt-toys" class="table table-bordered table-hover table-striped w-100">
+            <thead class="thead-dark w-100">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Compañía</th>
+                    <th>Descripción</th>
+                    <th>RestriccionEdad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ListToys)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex mt-2">
+                                <button onclick="rowData(this);" id="@item.Id" class="btn btn-sm btn-outline-primary mr-2" data-toggle="modal" data-target="#modalAdd" title="Editar"><i class="fal fa-edit"></i></button>
+                                <button onclick="deleteToy(this);" id="@item.Id" class="btn btn-sm btn-outline-danger mr-2" title="Borrar conductor"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </td>
+                        <td>
+                            <img src="@item.Img" alt="Alternate Text" class="w-75 h-75" />
+                        </td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Compañía</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.RestriccionEdad</td>
+                        <td>@item.Precio</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- datatable end -->
+
+</div>
+
+
+<!-- Modal Large -->
+<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Conductores</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <form asp-action="EditDrivers" asp-controller="Drivers" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <!-- hiden inputs -->
+                    <input type="hidden" name="txtFireBaseId" id="txtFireBaseId" value="" />
+                    <input type="hidden" name="txtFechaAlta" id="txtFechaAlta" value="" />
+                    <input type="hidden" name="txtTipoTrans" id="txtTipoTrans" />
+
+                    <!-- hiden inputs -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Toys.Nombre" class="form-label">Nombre</label>
+                                <input asp-for="Toys.Nombre" id="txt-nombre" class="form-control">
+                                <span asp-validation-for="Toys.Nombre" class="text-danger"></span>
+                                <br />
+                                <label asp-for="Toys.Compañía" class="form-label">Compañia</label>
+                                <input asp-for="Toys.Compañía" id="txt-compañia" class="form-control">
+                                <span asp-validation-for="Toys.Compañía" class="text-danger"></span>
+                                <br />
+                                <label asp-for="Toys.Descripcion" class="form-label" for="txtAMaterno">Descripción</label>
+                                <input asp-for="Toys.Descripcion" id="txtAMaterno" class="form-control">
+                                <span asp-validation-for="Toys.Descripcion" class="text-danger"></span>
+                                <br />
+                                <label asp-for="Toys.RestriccionEdad" class="form-label" for="txtTelefono">Restricción de edad</label>
+                                <input asp-for="Toys.RestriccionEdad" type="number" id="txt-restriccion" class="form-control">
+                                <span asp-validation-for="Toys.RestriccionEdad" class="text-danger"></span>
+                                <br />
+                                <label asp-for="Toys.Precio" class="form-label" for="txtTelefono">Precio</label>
+                                <input asp-for="Toys.Precio" type="number" id="txt-restriccion" class="form-control">
+                                <span asp-validation-for="Toys.Precio" class="text-danger"></span>
+                                <br /><br />
+                                <label class="form-label">Imagen</label>
+                                <div class="custom-file">
+                                    <input asp-for="Toys.Img" type="file" class="custom-file-input" id="img" name="img" accept="image/png, image/jpeg">
+                                    <label class="custom-file-label" for="customFile">Escoge Archivo</label>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        // initialize datatable
+        $('#dt-toys').dataTable(
+            {
+
+                //responsive: false,
+                //lengthChange: false,
+                dom:
+                    /*	--- Layout Structure
+                        --- Options
+                        l	-	length changing input control
+                        f	-	filtering input
+                        t	-	The table!
+                        i	-	Table information summary
+                        p	-	pagination control
+                        r	-	processing display element
+                        B	-	buttons
+                        R	-	ColReorder
+                        S	-	Select
+
+                        --- Markup
+                        < and >				- div element
+                        <"class" and >		- div with a class
+                        <"#id" and >		- div with an ID
+                        <"#id.class" and >	- div with an ID and a class
+
+                        --- Further reading
+                        https://datatables.net/reference/option/dom
+                        --------------------------------------
+                     */
+                    "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    //{
+                    //    extend:    'colvis',
+                    //    text:      'Column Visibility',
+                    //    titleAttr: 'Col visibility',
+                    //    className: 'mr-sm-3'
+                    //},
+                    {
+                        text: '<i class="fal fa-plus mr-1"></i> Agregar',
+                        titleAttr: 'Agregar',
+                        className: 'btn-dark btn-sm mr-1',
+                        action: function (e, dt, node, conf) {
+                            $('.btn-dark').attr('data-toggle', 'modal');
+                            $('.btn-dark').attr('data-Target', '#modalAdd');
+                            clearInputs();
+                        } //,
+                        //exportOptions: {
+                        //    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        //    stripHtml: false
+
+                        //}
+                    },
+                    {
+                        extend: 'colvis',
+                        text: 'Columnas',
+                        titleAttr: 'Columnas',
+                        className: 'btn-outline-default'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'PDF',
+                        titleAttr: 'Generar PDF',
+                        className: 'btn-outline-danger btn-sm mr-1',
+                        orientation: 'landscape', //portrait
+                        pageSize: 'A4', //A3 , A5 , A6 , legal , letter/
+                        title: 'Aspiria Jugeteria',
+                        exportOptions: {
+                            columns: ':visible',
+                            search: 'applied',
+                            order: 'applied'
+                            // columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        titleAttr: 'Generar Excel',
+                        className: 'btn-outline-success btn-sm mr-1'
+                    },
+                    //{
+                    //    extend: 'csvHtml5',
+                    //    text: 'CSV',
+                    //    titleAttr: 'Generate CSV',
+                    //    className: 'btn-outline-primary btn-sm mr-1'
+                    //},
+                    //{
+                    //    extend: 'copyHtml5',
+                    //    text: 'Copy',
+                    //    titleAttr: 'Copy to clipboard',
+                    //    className: 'btn-outline-primary btn-sm mr-1'
+                    //},
+                    {
+                        extend: 'print',
+                        text: 'Imprimir',
+                        titleAttr: 'Imprimir Tabla',
+                        className: 'btn-outline-default btn-sm'
+                    }
+                ],
+
+                //"columnDefs": [    //oculta columna
+                //    {
+                //        'targets': [14],
+                //        'visible': false,
+                //        'searchable': false
+                //    }
+
+                //],
+
+                "language": {
+                    "decimal": ".",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    //"search": "Buscar",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                    select: {
+                        rows: {
+                            _: "%d Filas Seleccionadas",
+                            0: "Click a una fila para seleccionarla",
+                            1: "1 Fila seleccionada"
+                        }
+                    }
+                },
+                select: true
+
+
+            });
+    });
+
+
+    //edit toys
+    function rowData(row) {
+
+        //// Obtenemos todos los valores contenidos en los <td> de la fila seleccionada
+        //var nombre = $(row).parents("tr").find("td").eq(1).html();
+        //var aPaterno = $(row).parents("tr").find("td").eq(2).html();
+        //var aMaterno = $(row).parents("tr").find("td").eq(3).html();
+        //var telefono = $(row).parents("tr").find("td").eq(4).html();
+        //var email = $(row).parents("tr").find("td").eq(5).html();
+        //var marca = $(row).parents("tr").find("td").eq(8).html();
+        //var modelo = $(row).parents("tr").find("td").eq(9).html();
+        //var year = $(row).parents("tr").find("td").eq(10).html();
+        //var placas = $(row).parents("tr").find("td").eq(11).html();
+        //var color = $(row).parents("tr").find("td").eq(12).html();
+        //var tipo = $(row).parents("tr").find("td").eq(13).html();
+        //var codigoVerificacion = $(row).parents("tr").find("td").eq(14).html();
+        //var activo = $(row).parents("tr").find("td").eq(18).children().text();
+        //var FireBaseId = row.id;
+
+        //$("#txtNombre").val(nombre);
+        //$("#txtAPaterno").val(aPaterno);
+        //$("#txtAMaterno").val(aMaterno);
+        //$("#txtTelefono").val(telefono);
+        //$("#txtEmail").val(email);
+        ////auto    lblCodigo
+        //$("#txtMarca").val(marca);
+        //$("#txtModelo").val(modelo);
+        //$("#txtYear").val(year);
+        //$("#txtPlacas").val(placas);
+        //$("#txtColor").val(color);
+        //$("#txtTipo").val(tipo);
+        ////$("#lblCodigo").text("Código de verificación: " + codigoVerificacion);
+
+
+
+        ////hiden ipnuts
+        //$("#txtFireBaseId").val(FireBaseId);
+        ////$("#txtFechaAlta").val(fechaAlta);
+        //$("#txtTipoTrans").val("EDIT");
+
+
+
+    }
+
+    function deleteToy(evt) {
+        var idConductor = evt.id;
+        var _url = "/Drivers/DeleteDrivers/'" + idConductor + "'";
+
+
+        Swal.fire({
+            title: 'Seguro ?',
+            text: "Se borrara definitivamente ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Si'
+        }).then((result) => {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: _url,
+                    type: 'POST',
+                    data: { id: idConductor },
+                    datatype: "json",
+                    success: function (res) {
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+
+            }
+        });
+
+    }
+
+</script>
+
+
+
+
+
+
