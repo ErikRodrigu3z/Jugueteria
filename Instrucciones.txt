@@ -1,1 +1,6 @@
 
+* cambiar la cadena de conexion DefaultConnection en el proyecto Jugeteria.APi, en el archivo appsettings.json, tambien para serilog para el log de errores.
+
+* utilizar la consola de (Package Manager Console) seleccionar el proyecto Jugueteria.persistence, para usar el comando "update-database" para crear la BD
+
+* se configuro para que corran ambos proyectos, la api y la web
