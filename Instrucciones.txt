@@ -3,4 +3,4 @@
 
 * utilizar la consola de (Package Manager Console) seleccionar el proyecto Jugueteria.persistence, para usar el comando "update-database" para crear la BD
 
-* se configuro para que corran ambos proyectos, la api y la web
+* se configuro para que corran ambos proyectos, la api y la web, en caso de que no se debe dar click derecho en la solución, propiedades, seleccionar Multiple Start Up Projets, seleccionar la opción Start en los proyectos Jugueteria.Api y Jugueteria.Web y dar click en el botton Apply.
