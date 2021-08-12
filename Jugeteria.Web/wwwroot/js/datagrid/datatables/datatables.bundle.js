@@ -15517,19 +15517,19 @@ $.extend(true, $.fn.dataTable.defaults, {
 	language: {
 		/* change the default text for 'next' and 'previous' with icons */
 		paginate: {
-			previous: "<i class='fal fa-chevron-left'></i>",
-			next: "<i class='fal fa-chevron-right'></i>"
+			previous: "<i class='fa fa-chevron-left'></i>",
+			next: "<i class='fa fa-chevron-right'></i>"
 		},
 		processing: '<div class="d-flex align-items-center justify-content-center fs-lg"><div class="spinner-border spinner-border-sm text-primary mr-2" role="status"><span class="sr-only"> Loading...</span></div> Processing...</div>',
 		/* replace the default search lable text with a nice icon */
-		search: '<div class="input-group-text d-inline-flex width-3 align-items-center justify-content-center border-bottom-right-radius-0 border-top-right-radius-0 border-right-0"><i class="fal fa-search"></i></div>',
+		search: '<div class="input-group-text d-inline-flex width-3 align-items-center justify-content-center border-bottom-right-radius-0 border-top-right-radius-0 border-right-0"><i class="fa fa-search"></i></div>',
 		/* add search filter */
 		searchPlaceholder: "Search",
 		/* change text for zero records */
 		zeroRecords: "No records to display"
 	},
 	initComplete: function(settings, json) {
-		initApp.appForms('.dataTables_filter', 'has-length', 'has-disabled');
+		/*initApp.appForms('.dataTables_filter', 'has-length', 'has-disabled');*/
 	}
 
 });
@@ -31331,7 +31331,7 @@ return $.fn.dataTable;
 					'<div class="modal-content">' +
 					'<div class="modal-header">' +
 					'<h5 class="modal-title"></h5>' +
-					'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fal fa-times"></i></span></button>' +
+					'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times"></i></span></button>' +
 					'</div>' +
 					'<div class="modal-body">' +
 					'<p></p>' +
@@ -31649,7 +31649,7 @@ return $.fn.dataTable;
 				var selector = this.modal_selector;
 				$(selector).on('show.bs.modal', function () {
 					var btns = '<button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
-						'<button type="button"  data-content="remove" class="btn btn-danger" id="deleteRowBtn"><i class="fal fa-times"></i> Delete</button>';
+						'<button type="button"  data-content="remove" class="btn btn-danger" id="deleteRowBtn"><i class="fa fa-times"></i> Delete</button>';
 					$(selector).find('.modal-title').html('Delete Record');
 					$(selector).find('.modal-body').html(data);
 					$(selector).find('.modal-footer').html(btns);

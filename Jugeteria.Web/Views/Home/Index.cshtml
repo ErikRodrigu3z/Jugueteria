@@ -3,7 +3,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<script src="https://use.fontawesome.com/6815060193.js"></script>
+
 
 
 <div class="text-center">
@@ -33,25 +33,27 @@
                     <tr>
                         <td>
                             <div class="d-flex mt-2">
-                                <button onclick="rowData(this);" id="@item.Id" class="btn btn-sm btn-outline-primary mr-2" data-toggle="modal" data-target="#modalAdd" title="Editar"><i class="fal fa-edit"></i></button>
-                                <button onclick="deleteToy(this);" id="@item.Id" class="btn btn-sm btn-outline-danger mr-2" title="Borrar conductor"><i class="fa fa-trash"></i></button>
+                                <button onclick="rowData(this);" id="@item.Id" class="btn btn-sm btn-outline-primary mr-2" data-toggle="modal" data-target="#modalAdd" title="Editar"><i class="fa fa-edit"></i></button>
+                                <button onclick="deleteToy(this);" id="@item.Id" class="btn btn-sm btn-outline-danger mr-2" title="Borrar"><i class="fa fa-trash"></i></button>
                             </div>
                         </td>
                         <td>
-                            <img src="@item.Img" alt="Alternate Text" class="w-75 h-75" />
+                            <img src="@item.Img" alt="Sin imagen" style="width:75px;height:75px;" />
                         </td>
                         <td>@item.Nombre</td>
                         <td>@item.Compañía</td>
                         <td>@item.Descripcion</td>
                         <td>@item.RestriccionEdad</td>
-                        <td>@item.Precio</td>
+                        <td>@string.Format("{0:C}", item.Precio)</td>
                     </tr>
                 }
             </tbody>
         </table>
+        <br />
+        <hr />
     </div>
     <!-- datatable end -->
-
+    
 </div>
 
 
@@ -60,57 +62,59 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Conductores</h5>
+                <h5 class="modal-title">Juguetes</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                    <span aria-hidden="true"><i class="fa fa-times"></i></span>
                 </button>
             </div>
-            <form asp-action="EditDrivers" asp-controller="Drivers" method="post" enctype="multipart/form-data">
+            <form asp-action="Create" asp-controller="Home" method="post" enctype="multipart/form-data"  >
                 <div class="modal-body">
                     <!-- hiden inputs -->
-                    <input type="hidden" name="txtFireBaseId" id="txtFireBaseId" value="" />
-                    <input type="hidden" name="txtFechaAlta" id="txtFechaAlta" value="" />
                     <input type="hidden" name="txtTipoTrans" id="txtTipoTrans" />
-
+                    <input asp-for="Toys.Id" id="txt-id" hidden>
                     <!-- hiden inputs -->
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="Toys.Nombre" class="form-label">Nombre</label>
                                 <input asp-for="Toys.Nombre" id="txt-nombre" class="form-control">
-                                <span asp-validation-for="Toys.Nombre" class="text-danger"></span>
+                                <span asp-validation-for="Toys.Nombre" class="text-danger" ></span>
                                 <br />
                                 <label asp-for="Toys.Compañía" class="form-label">Compañia</label>
                                 <input asp-for="Toys.Compañía" id="txt-compañia" class="form-control">
-                                <span asp-validation-for="Toys.Compañía" class="text-danger"></span>
+                                <span asp-validation-for="Toys.Compañía" class="text-danger" ></span>
                                 <br />
                                 <label asp-for="Toys.Descripcion" class="form-label" for="txtAMaterno">Descripción</label>
-                                <input asp-for="Toys.Descripcion" id="txtAMaterno" class="form-control">
-                                <span asp-validation-for="Toys.Descripcion" class="text-danger"></span>
+                                <input asp-for="Toys.Descripcion" id="txt-descripcion" class="form-control">
+                                <span asp-validation-for="Toys.Descripcion" class="text-danger" ></span>
                                 <br />
                                 <label asp-for="Toys.RestriccionEdad" class="form-label" for="txtTelefono">Restricción de edad</label>
                                 <input asp-for="Toys.RestriccionEdad" type="number" id="txt-restriccion" class="form-control">
-                                <span asp-validation-for="Toys.RestriccionEdad" class="text-danger"></span>
+                                <span asp-validation-for="Toys.RestriccionEdad" class="text-danger" ></span>
                                 <br />
                                 <label asp-for="Toys.Precio" class="form-label" for="txtTelefono">Precio</label>
-                                <input asp-for="Toys.Precio" type="number" id="txt-restriccion" class="form-control">
-                                <span asp-validation-for="Toys.Precio" class="text-danger"></span>
+                                <input asp-for="Toys.Precio" type="text" id="txt-precio" class="form-control">
+                                <span asp-validation-for="Toys.Precio" class="text-danger" ></span>
                                 <br /><br />
                                 <label class="form-label">Imagen</label>
                                 <div class="custom-file">
-                                    <input asp-for="Toys.Img" type="file" class="custom-file-input" id="img" name="img" accept="image/png, image/jpeg">
+                                    <input asp-for="Toys.Img" type="file" class="custom-file-input" id="img" name="img" accept="image/png, image/jpeg" onchange="changeImage(this);">
                                     <label class="custom-file-label" for="customFile">Escoge Archivo</label>
                                 </div>
                                 <br />
                             </div>
                         </div>
-                       
+                        <div class="col-md-6">
+                            <img  alt="Sin imagen" id="img-toy" style="width:60%;height:55%;" />
+                        </div>
+
                     </div>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary" >Guardar</button>
                 </div>
             </form>
         </div>
@@ -126,57 +130,22 @@
 
         // initialize datatable
         $('#dt-toys').dataTable(
-            {
-
-                //responsive: false,
-                //lengthChange: false,
+            {  
                 dom:
-                    /*	--- Layout Structure
-                        --- Options
-                        l	-	length changing input control
-                        f	-	filtering input
-                        t	-	The table!
-                        i	-	Table information summary
-                        p	-	pagination control
-                        r	-	processing display element
-                        B	-	buttons
-                        R	-	ColReorder
-                        S	-	Select
-
-                        --- Markup
-                        < and >				- div element
-                        <"class" and >		- div with a class
-                        <"#id" and >		- div with an ID
-                        <"#id.class" and >	- div with an ID and a class
-
-                        --- Further reading
-                        https://datatables.net/reference/option/dom
-                        --------------------------------------
-                     */
+                   
                     "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-                buttons: [
-                    //{
-                    //    extend:    'colvis',
-                    //    text:      'Column Visibility',
-                    //    titleAttr: 'Col visibility',
-                    //    className: 'mr-sm-3'
-                    //},
+                buttons: [                   
                     {
-                        text: '<i class="fal fa-plus mr-1"></i> Agregar',
+                        text: '<i class="fa fa-plus mr-1"></i> Agregar',
                         titleAttr: 'Agregar',
                         className: 'btn-dark btn-sm mr-1',
                         action: function (e, dt, node, conf) {
                             $('.btn-dark').attr('data-toggle', 'modal');
                             $('.btn-dark').attr('data-Target', '#modalAdd');
                             clearInputs();
-                        } //,
-                        //exportOptions: {
-                        //    columns: [0, 1, 2, 3, 4, 5, 6, 7],
-                        //    stripHtml: false
-
-                        //}
+                        } 
                     },
                     {
                         extend: 'colvis',
@@ -223,16 +192,7 @@
                         titleAttr: 'Imprimir Tabla',
                         className: 'btn-outline-default btn-sm'
                     }
-                ],
-
-                //"columnDefs": [    //oculta columna
-                //    {
-                //        'targets': [14],
-                //        'visible': false,
-                //        'searchable': false
-                //    }
-
-                //],
+                ],              
 
                 "language": {
                     "decimal": ".",
@@ -267,55 +227,37 @@
             });
     });
 
-
     //edit toys
     function rowData(row) {
 
-        //// Obtenemos todos los valores contenidos en los <td> de la fila seleccionada
-        //var nombre = $(row).parents("tr").find("td").eq(1).html();
-        //var aPaterno = $(row).parents("tr").find("td").eq(2).html();
-        //var aMaterno = $(row).parents("tr").find("td").eq(3).html();
-        //var telefono = $(row).parents("tr").find("td").eq(4).html();
-        //var email = $(row).parents("tr").find("td").eq(5).html();
-        //var marca = $(row).parents("tr").find("td").eq(8).html();
-        //var modelo = $(row).parents("tr").find("td").eq(9).html();
-        //var year = $(row).parents("tr").find("td").eq(10).html();
-        //var placas = $(row).parents("tr").find("td").eq(11).html();
-        //var color = $(row).parents("tr").find("td").eq(12).html();
-        //var tipo = $(row).parents("tr").find("td").eq(13).html();
-        //var codigoVerificacion = $(row).parents("tr").find("td").eq(14).html();
-        //var activo = $(row).parents("tr").find("td").eq(18).children().text();
-        //var FireBaseId = row.id;
+        // Obtenemos todos los valores contenidos en los <td> de la fila seleccionada
+        var nombre = $(row).parents("tr").find("td").eq(2).html();
+        var compañia = $(row).parents("tr").find("td").eq(3).html();
+        var descripcion = $(row).parents("tr").find("td").eq(4).html();
+        var restriccion = $(row).parents("tr").find("td").eq(5).html();
+        var precio = $(row).parents("tr").find("td").eq(6).html();
+        var toyId = row.id;
 
-        //$("#txtNombre").val(nombre);
-        //$("#txtAPaterno").val(aPaterno);
-        //$("#txtAMaterno").val(aMaterno);
-        //$("#txtTelefono").val(telefono);
-        //$("#txtEmail").val(email);
-        ////auto    lblCodigo
-        //$("#txtMarca").val(marca);
-        //$("#txtModelo").val(modelo);
-        //$("#txtYear").val(year);
-        //$("#txtPlacas").val(placas);
-        //$("#txtColor").val(color);
-        //$("#txtTipo").val(tipo);
-        ////$("#lblCodigo").text("Código de verificación: " + codigoVerificacion);
-
-
-
-        ////hiden ipnuts
-        //$("#txtFireBaseId").val(FireBaseId);
-        ////$("#txtFechaAlta").val(fechaAlta);
-        //$("#txtTipoTrans").val("EDIT");
-
-
-
+        $("#txt-nombre").val(nombre);
+        $("#txt-compañia").val(compañia);
+        $("#txt-descripcion").val(descripcion);
+        $("#txt-restriccion").val(restriccion);
+        $("#txt-precio").val(precio.replace("$", "").replace(",", ""));
+        //hiden ipnuts
+        $("#txt-id").val(toyId);       
+        $("#txtTipoTrans").val("EDIT");
+        //clean span
+        $("#txt-nombre-error").html("");
+        $("#txt-compañia-error").html("");
+        $("#txt-descripcion-error").html("");
+        $("#txt-restriccion-error").html("");
+        $("#txt-precio-error").html("");
     }
 
+    //delete
     function deleteToy(evt) {
-        var idConductor = evt.id;
-        var _url = "/Drivers/DeleteDrivers/'" + idConductor + "'";
-
+        var id = evt.id;
+        var _url = "/Home/Delete/'" + id + "'";
 
         Swal.fire({
             title: 'Seguro ?',
@@ -332,7 +274,7 @@
                 $.ajax({
                     url: _url,
                     type: 'POST',
-                    data: { id: idConductor },
+                    data: { id: id },
                     datatype: "json",
                     success: function (res) {
                         window.location.reload();
@@ -346,6 +288,22 @@
         });
 
     }
+
+    function clearInputs() {
+        $("#txt-nombre").val("");
+        $("#txt-compañia").val("");
+        $("#txt-descripcion").val("");
+        $("#txt-restriccion").val("");
+        $("#txt-precio").val("");
+        //hiden ipnuts        
+        $("#txtTipoTrans").val("ADD");
+    }
+
+    function changeImage(img) {
+        document.getElementById('img-toy').src = window.URL.createObjectURL(img.files[0])
+    }
+   
+
 
 </script>
 

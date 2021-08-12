@@ -1,6 +1,9 @@
 ﻿using Jugueteria.Models;
 using Jugueteria.Persistence;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Jugueteria.Service.Repositories.ToysRepository
 {
@@ -9,6 +12,37 @@ namespace Jugueteria.Service.Repositories.ToysRepository
         public ToysRepository(ApplicationDbContext db) : base(db)
         {
 
+        }
+
+        public async Task<int> AddToy(Toys toys)
+        {
+            try
+            {
+                _db.Add(toys);
+                await _db.SaveChangesAsync();
+                return toys.Id;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task DeleteToy(int id)
+        {
+            try
+            {
+                var toy = await _db.Toys.FirstOrDefaultAsync(x => x.Id == id);
+                if (toy != null)
+                {
+                    _db.Toys.Remove(toy);
+                    _db.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 

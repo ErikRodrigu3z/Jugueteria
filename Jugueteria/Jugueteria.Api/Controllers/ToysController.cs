@@ -34,7 +34,8 @@ namespace Jugueteria.Api.Controllers
                 }
                 else
                 {
-                    _toysRepo.SeedData();
+                    //descomentar esta linea para agregar 4 registros o comentar para que no agrege registros al refrescar
+                    _toysRepo.SeedData();  
                     return NotFound();
                 }
             }
@@ -45,12 +46,56 @@ namespace Jugueteria.Api.Controllers
             }
         }
 
+        [HttpDelete] 
+        public async Task<IActionResult> Delete(int id)  
+        {
+            try 
+            {
+                await _toysRepo.DeleteToy(id);               
+                return Ok();                
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, HttpContext.Request.Path);
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Toys toys) 
+        {
+            try
+            {
+                int id = await _toysRepo.AddToy(toys);
+                //actualiza la imagen con el scope identity
+                toys.Img = $"/img/toys/{toys.Id}.jpg";
+                await _toysRepo.UpdateAsync(toys);
+                return Ok(id); 
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, HttpContext.Request.Path);
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut] 
+        public async Task<IActionResult> Put([FromBody]Toys toys)
+        {
+            try
+            {
+                toys.Img = $"/img/toys/{toys.Id}.jpg";
+                await _toysRepo.UpdateAsync(toys);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, HttpContext.Request.Path);
+                return BadRequest(ex);
+            }
+        }
 
 
-
-
-
-      
 
 
 

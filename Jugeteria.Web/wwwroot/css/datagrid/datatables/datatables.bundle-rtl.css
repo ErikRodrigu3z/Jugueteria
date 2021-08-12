@@ -1213,7 +1213,7 @@ table.dataTable thead .sorting_desc:before,
 table.dataTable thead .sorting_asc_disabled:before,
 table.dataTable thead .sorting_desc_disabled:before {
   left: 1rem !important;
-  content: "\f175";
+  content: "";
   font-size: 14px;
   font-family: 'Font Awesome 5 Pro'; }
 
@@ -1223,7 +1223,7 @@ table.dataTable thead .sorting_desc:after,
 table.dataTable thead .sorting_asc_disabled:after,
 table.dataTable thead .sorting_desc_disabled:after {
   left: 0.5rem !important;
-  content: "\f176";
+  content: "";
   font-size: 14px;
   font-family: 'Font Awesome 5 Pro'; }
 

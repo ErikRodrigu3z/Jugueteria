@@ -24,13 +24,7 @@ namespace Jugueteria.Service.Repositories.HttpClientService
         {
             try
             {
-                var httpClientHandler = new HttpClientHandler();
-                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
-                {
-                    return true;
-                };
-
-                using (var client = new HttpClient(httpClientHandler)) 
+                using (var client = new HttpClient(CertificateValidation())) 
                 {
                     ServicePointManager.Expect100Continue = true;
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -66,21 +60,95 @@ namespace Jugueteria.Service.Repositories.HttpClientService
 
         }
 
-        public async Task<T> Get<T>(string MethodWithParameters, string accessToken = null)
+        public async Task<string> PutAsync<T>(string Method, T Object, string accessToken = null)
         {
-            var httpClientHandler = new HttpClientHandler();
-            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
-            {
-                return true;
-            };
+            try 
+            {                
+                using (var client = new HttpClient(CertificateValidation()))
+                {
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                    ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 
-            using (var client = new HttpClient(httpClientHandler))
+                    client.BaseAddress = new Uri(URLService);
+                    client.Timeout = TimeSpan.FromMinutes(10);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    if (!string.IsNullOrEmpty(accessToken))
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+
+                    string jsonparameters = JsonConvert.SerializeObject(Object);
+
+                    var content = new StringContent(jsonparameters, System.Text.Encoding.UTF8, "application/json");
+
+                    var result = await client.PutAsync(Method, content);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var resultContent = await result.Content.ReadAsStringAsync();
+
+                        return resultContent;
+                    }
+                }
+                return string.Empty;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public async Task<string> DeleteAsync<T>(string Method, T Object, string accessToken = null)
+        { 
+            try
+            {                
+                using (var client = new HttpClient(CertificateValidation()))
+                {
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                    ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+
+                    client.BaseAddress = new Uri(URLService);
+                    client.Timeout = TimeSpan.FromMinutes(10);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    if (!string.IsNullOrEmpty(accessToken))
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+
+                    string jsonparameters = JsonConvert.SerializeObject(Object);
+
+                    var content = new StringContent(jsonparameters, System.Text.Encoding.UTF8, "application/json");
+
+                    var result = await client.DeleteAsync(Method);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var resultContent = await result.Content.ReadAsStringAsync();
+
+                        return resultContent;
+                    }
+                }
+                return string.Empty;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public async Task<T> Get<T>(string MethodWithParameters, string accessToken = null)
+        {           
+            using (var client = new HttpClient(CertificateValidation()))
             {
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 
-                client.BaseAddress = new Uri(URLService);
+                client.BaseAddress = new Uri(URLService);                
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 if (!string.IsNullOrEmpty(accessToken))
@@ -98,13 +166,7 @@ namespace Jugueteria.Service.Repositories.HttpClientService
 
         public async Task<List<T>> GetListAsync<T>(string MethodWithParameters, string accessToken = null)
         {
-            var httpClientHandler = new HttpClientHandler();
-            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
-            {
-                return true;
-            };
-
-            using (var client = new HttpClient(httpClientHandler))
+            using (var client = new HttpClient(CertificateValidation()))
             {
 
                 ServicePointManager.Expect100Continue = true;
@@ -129,7 +191,10 @@ namespace Jugueteria.Service.Repositories.HttpClientService
             return default(List<T>);
         }
 
-        public byte[] Get(string MethodWithParameters)
+
+        #region CertificateValidation
+
+        public HttpClientHandler CertificateValidation()
         {
             var httpClientHandler = new HttpClientHandler();
             httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
@@ -137,23 +202,11 @@ namespace Jugueteria.Service.Repositories.HttpClientService
                 return true;
             };
 
-            using (var client = new HttpClient(httpClientHandler))
-            {
-                client.BaseAddress = new Uri(URLService);
-
-                var result = client.GetAsync(MethodWithParameters).Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    byte[] bytes = result.Content.ReadAsByteArrayAsync().Result;
-                    return bytes;
-                }
-            }
-            return null;
+            return httpClientHandler;
         }
 
 
-
-
+        #endregion
 
     }
 }

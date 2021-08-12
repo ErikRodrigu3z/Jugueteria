@@ -9,8 +9,8 @@ namespace Jugueteria.Service.Repositories.ToysRepository
 {
     public interface IToysRepository : IRepositoryBase<Toys> 
     {
-        void SeedData();
-
-
+        void SeedData();         
+        Task DeleteToy(int id);
+        Task<int> AddToy(Toys toys);
     }
 }

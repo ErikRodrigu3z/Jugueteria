@@ -12,9 +12,12 @@ namespace Jugueteria.Service.Repositories
         Task<List<T>> GetListAsync(); 
         IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
         Task<List<T>> FindByConditionAsync(Expression<Func<T, bool>> expression);
-        void Create(T entity);
-        void Update(T entity);
+        void Create(T entity); 
+        Task CreateAsync(T entity);
+        void Update(T entity); 
+        Task UpdateAsync(T entity);
         void Delete(T entity);
+        Task DeleteAsync(T entity); 
 
 
     }

@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Jugueteria\Jugueteria.Service\Jugueteria.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\toys\" />
+  </ItemGroup>
+
 </Project>
